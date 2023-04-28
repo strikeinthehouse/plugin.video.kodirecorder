@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addon id="plugin.video.kodirecorder"
+       name="Kodi Recorder"
+       version="1.0.0"
+       provider-name="Guilherme Martins">
+    <requires>
+        <import addon="xbmc.python" version="3.0.0"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource"
+               library="main.py">
+        <provides>video</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">Kodi add-on for recording channels</summary>
+        <description lang="en_GB">This add-on allows you to record channels in Kodi using ffmpeg.</description>
+        <platform>all</platform>
+        <language>en</language>
+        <license>MIT</license>
+    </extension>
+</addon>
