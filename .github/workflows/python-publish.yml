@@ -1,0 +1,27 @@
+name: Criar arquivo .zip
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Verificar repositório
+      run: |
+        echo "Repositório: ${{ github.repository }}"
+        echo "Branch: ${{ github.ref }}"
+
+    - name: Clonar repositório
+      uses: actions/checkout@v2
+
+    - name: Criar arquivo .zip
+      run: |
+        apt-get update && apt-get install -y zip
+        cd ${{ github.workspace }}
+        zip -r arquivos.zip $(find . -type f ! -name "*.zip")
+
+    - name: Enviar arquivo .zip
+      uses: actions/upload-artifact@v2
+      with:
+        name: arquivos-zip
+        path: arquivos.zip
