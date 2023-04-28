@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Verificar repositório
+    - name: Verificar o repositório
       run: |
         echo "Repositório: ${{ github.repository }}"
         echo "Branch: ${{ github.ref }}"
