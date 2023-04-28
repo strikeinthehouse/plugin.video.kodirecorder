@@ -26,7 +26,7 @@ jobs:
       - name: Criar arquivo .zip
         run: |
           cd ${{ github.workspace }}
-          zip -r arquivos.zip -@ < arquivos.txt
+          zip -r ${{ github.workspace }}/arquivos.zip -@ < arquivos.txt
 
       - name: Configurar Git
         run: |
