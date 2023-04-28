@@ -23,6 +23,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install p7zip-full -y
 
+      - name: Criar diretório arquivos_zip
+        run: |
+          cd ${{ github.workspace }}
+          mkdir arquivos_zip
+
       - name: Listar arquivos
         run: |
           cd ${{ github.workspace }}
@@ -31,7 +36,7 @@ jobs:
       - name: Criar arquivo .zip
         run: |
           cd ${{ github.workspace }}
-          7z a -ssw arquivos.zip @arquivos.txt
+          7z a -ssw arquivos_zip/arquivos.zip @arquivos.txt
 
       - name: Configurar Git
         run: |
@@ -42,6 +47,6 @@ jobs:
         run: |
           cd ${{ github.workspace }}
           git checkout ${{ github.ref }}
-          git add arquivos.zip
+          git add arquivos_zip/arquivos.zip
           git commit -m "Adicionar arquivo zip com todos os arquivos do repositório"
           git push origin ${{ github.ref }}
