@@ -11,16 +11,20 @@ addon_handle = int(sys.argv[1])
 addon = xbmcaddon.Addon()
 xbmcplugin.setContent(addon_handle, 'videos')
 
-def record_channel(channel_url, output_folder, output_format):
-    # Certifique-se de que o ffmpeg esteja instalado e acessível no PATH
-    ffmpeg_command = [
-        'ffmpeg',
-        '-i', channel_url,
-        '-c', 'copy',
-        '-f', output_format,
-        os.path.join(output_folder, f'recording.{output_format}')
-    ]
-    subprocess.Popen(ffmpeg_command)
+
+def record_channel(channel_url, output_folder, output_format, duration):
+    try:
+        # Certifique-se de que o ffmpeg esteja instalado e acessível no PATH
+        ffmpeg_command = ['ffmpeg', '-i', channel_url,
+                          '-c', 'copy',
+                          '-t', str(duration),  # Adicione a duração da gravação
+                          '-f', output_format,
+                          os.path.join(output_folder, f'recording.{output_format}')
+                          ]
+        subprocess.Popen(ffmpeg_command)
+    except Exception as e:
+        print(f"Erro durante a gravação: {str(e)}")
+
 
 def get_params():
     param = {}
@@ -40,6 +44,7 @@ def get_params():
 
     return param
 
+
 params = get_params()
 mode = params.get('mode')
 
@@ -55,12 +60,15 @@ if mode == 'record':
     format_list = ['mp4', 'mkv', 'avi', 'ts']
     selected_format = dialog.select('Selecione o formato de gravação', format_list)
 
-    if output_folder and selected_format != -1:
+    # Permitir que o usuário insira a duração da gravação em segundos
+    duration = dialog.input('Insira a duração da gravação em segundos', type=xbmcgui.INPUT_NUMERIC)
+
+    if output_folder and selected_format != -1 and duration:
         output_format = format_list[selected_format]
-        record_channel(channel_url, output_folder, output_format)
+        record_channel(channel_url, output_folder, output_format, int(duration))
         dialog.notification('Gravando', f'Gravando {channel_name}', xbmcgui.NOTIFICATION_INFO, 5000)
     else:
-        dialog.notification('Erro', 'Pasta ou formato não selecionado', xbmcgui.NOTIFICATION_ERROR, 5000)
+        dialog.notification('Erro', 'Pasta, formato ou duração não selecionados', xbmcgui.NOTIFICATION_ERROR, 5000)
 
 else:
     # Obter a lista de canais do PVR do Kodi
@@ -77,4 +85,4 @@ else:
         xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, isFolder=False)
 
     xbmcplugin.endOfDirectory(addon_handle)
-
+    
