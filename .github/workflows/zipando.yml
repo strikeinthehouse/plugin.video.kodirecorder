@@ -18,6 +18,11 @@ jobs:
       - name: Clonar repositório
         uses: actions/checkout@v2
 
+      - name: Instalar o 7-Zip
+        run: |
+          sudo apt-get update
+          sudo apt-get install p7zip-full -y
+
       - name: Listar arquivos
         run: |
           cd ${{ github.workspace }}
@@ -26,7 +31,7 @@ jobs:
       - name: Criar arquivo .zip
         run: |
           cd ${{ github.workspace }}
-          zip -r ${{ github.workspace }}/arquivos.zip -@ < arquivos.txt
+          7z a arquivos.zip @arquivos.txt
 
       - name: Configurar Git
         run: |
