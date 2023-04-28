@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Verificar o repositório
+    - name: Verificar repositório
       run: |
         echo "Repositório: ${{ github.repository }}"
         echo "Branch: ${{ github.ref }}"
@@ -14,11 +14,15 @@ jobs:
     - name: Clonar repositório
       uses: actions/checkout@v2
 
+    - name: Listar arquivos
+      run: |
+        cd ${{ github.workspace }}
+        find . -type f ! -name "*.zip" > arquivos.txt
+
     - name: Criar arquivo .zip
       run: |
-        apt-get update && apt-get install -y zip
         cd ${{ github.workspace }}
-        zip -r arquivos.zip $(find . -type f ! -name "*.zip")
+        zip -r arquivos.zip -@ < arquivos.txt
 
     - name: Enviar arquivo .zip
       uses: actions/upload-artifact@v2
