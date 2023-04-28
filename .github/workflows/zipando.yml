@@ -1,0 +1,42 @@
+name: Criar arquivo .zip e fazer push
+
+on:
+  push:
+    branches:
+      - main  # Defina a branch que deseja monitorar para fazer push do arquivo zip
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Verificar repositório
+        run: |
+          echo "Repositório: ${{ github.repository }}"
+          echo "Branch: ${{ github.ref }}"
+
+      - name: Clonar repositório
+        uses: actions/checkout@v2
+
+      - name: Listar arquivos
+        run: |
+          cd ${{ github.workspace }}
+          find . -type f ! -name "*.zip" > arquivos.txt
+
+      - name: Criar arquivo .zip
+        run: |
+          cd ${{ github.workspace }}
+          zip -r arquivos.zip -@ < arquivos.txt
+
+      - name: Configurar Git
+        run: |
+          git config --global user.name "Seu Nome de Usuário"
+          git config --global user.email "seu-email@example.com"
+
+      - name: Fazer push do arquivo .zip
+        run: |
+          cd ${{ github.workspace }}
+          git checkout ${{ github.ref }}
+          git add arquivos.zip
+          git commit -m "Adicionar arquivo zip com todos os arquivos do repositório"
+          git push origin ${{ github.ref }}
